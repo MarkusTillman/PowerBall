@@ -1,0 +1,27 @@
+C:\Users\Ermin\Documents\visual studio 2010\Projects\Example\Bin\x86\Example.exe
+C:\Users\Ermin\Documents\visual studio 2010\Projects\Example\Bin\x86\Example.pdb
+C:\Users\Ermin\Documents\visual studio 2010\Projects\Example\Code\Example\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Ermin\Documents\visual studio 2010\Projects\Example\Code\Example\obj\x86\Debug\Example.form1.resources
+C:\Users\Ermin\Documents\visual studio 2010\Projects\Example\Code\Example\obj\x86\Debug\Example.Properties.Resources.resources
+C:\Users\Ermin\Documents\visual studio 2010\Projects\Example\Code\Example\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Ermin\Documents\visual studio 2010\Projects\Example\Code\Example\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Ermin\Documents\visual studio 2010\Projects\Example\Code\Example\obj\x86\Debug\Example.exe
+C:\Users\Ermin\Documents\visual studio 2010\Projects\Example\Code\Example\obj\x86\Debug\Example.pdb
+C:\Users\Administrator\Desktop\C# Example\Example\Bin\x86\Example.exe
+C:\Users\Administrator\Desktop\C# Example\Example\Bin\x86\Example.pdb
+C:\Users\Administrator\Desktop\C# Example\Example\Code\Example\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\C# Example\Example\Code\Example\obj\x86\Debug\Example.form1.resources
+C:\Users\Administrator\Desktop\C# Example\Example\Code\Example\obj\x86\Debug\Example.Properties.Resources.resources
+C:\Users\Administrator\Desktop\C# Example\Example\Code\Example\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Administrator\Desktop\C# Example\Example\Code\Example\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Administrator\Desktop\C# Example\Example\Code\Example\obj\x86\Debug\Example.exe
+C:\Users\Administrator\Desktop\C# Example\Example\Code\Example\obj\x86\Debug\Example.pdb
+C:\Users\Administrator\Desktop\scriptProject\C# Example\Example\Bin\x86\Example.exe
+C:\Users\Administrator\Desktop\scriptProject\C# Example\Example\Bin\x86\Example.pdb
+C:\Users\Administrator\Desktop\scriptProject\C# Example\Example\Code\Example\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\scriptProject\C# Example\Example\Code\Example\obj\x86\Debug\Example.form1.resources
+C:\Users\Administrator\Desktop\scriptProject\C# Example\Example\Code\Example\obj\x86\Debug\Example.Properties.Resources.resources
+C:\Users\Administrator\Desktop\scriptProject\C# Example\Example\Code\Example\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Administrator\Desktop\scriptProject\C# Example\Example\Code\Example\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Administrator\Desktop\scriptProject\C# Example\Example\Code\Example\obj\x86\Debug\Example.exe
+C:\Users\Administrator\Desktop\scriptProject\C# Example\Example\Code\Example\obj\x86\Debug\Example.pdb
