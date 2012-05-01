@@ -15,9 +15,6 @@ namespace PowerBallAI
         CppCLI      mGameEngine = null;
         AIMap       mMap;
         bool        mAPILoaded = false;
-        //**
-        //Graphics    mGraphics;
-        //Bitmap      mBitmap;
 
         public form1()
         {
@@ -25,9 +22,6 @@ namespace PowerBallAI
 
             this.mGameEngine = new CppCLI();
             this.mMap = new AIMap(); 
-            //**
-            //this.mBitmap = new Bitmap(Width, Height);
-            //this.mGraphics = Graphics.FromImage(this.mBitmap); 
 
             this.ResizeEnd += new EventHandler(form1_ResizeEnd);
             this.Resize += new EventHandler(form1_Resize);
@@ -44,72 +38,10 @@ namespace PowerBallAI
         //This is our update/Renderloop
         private void Run()
         {
-            /*
-            Graphics surface = this.CreateGraphics();
-            Pen pen1 = new Pen(System.Drawing.Color.Blue, 1.0f);
-            surface.DrawLine(pen1, 10, 10, 100, 100);
-            surface.DrawRectangle(pen1, 150, 10, 50, 200);
-            */
-
-            /*
-            System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red);
-            System.Drawing.Graphics formGraphics = this.CreateGraphics();
-            formGraphics.FillRectangle(myBrush, 0, 0, 200, 300);
-            myBrush.Dispose();
-            formGraphics.Dispose();
-            */
-
-
-            if(this.mAPILoaded)
+            if (this.mAPILoaded)
             {
-                //**
-                //Graphics graphics = Graphics.FromHwnd(this.Handle);
-
                 //Run the GameEngine for one frame
                 this.mGameEngine.ProcessFrame();
-
-                //Draw areas
-                for (uint i = 0; i < this.mMap.GetNrOfAreas(); i++)
-                {
-                    Area area = this.mMap.GetArea(i);
-                    Pen pen = null;
-                    if(area.IsForbidden())
-                    {
-                        pen = new Pen(Color.Red);
-                    }
-                    else
-                    {
-                        pen = new Pen(Color.Blue);
-                    }
-
-                    if (area is Rectangle)
-                    {
-                        /**
-                        this.mGraphics.DrawRectangle(   pen,
-                                                        area.GetX(),
-                                                        area.GetZ(),
-                                                        ((Rectangle)area).GetWidth(),
-                                                        ((Rectangle)area).GetHeight());
-                         */
-                    }
-                    else if (area is Circle)
-                    {
-                        //**
-                        /*
-                        this.mBitmap = new Bitmap(Width, Height); 
-                        this.mGraphics = Graphics.FromImage(this.mBitmap);
-
-                        this.mGraphics.DrawEllipse( pen,
-                                                    area.GetX(),
-                                                    area.GetZ(),
-                                                    ((Circle)area).GetRadius() * 2,
-                                                    ((Circle)area).GetRadius() * 2);
-                         */
-                    }
-                }
-
-                //**
-                //graphics.DrawImage(this.mBitmap, 0, 0);
             }
         }
 
@@ -147,12 +79,13 @@ namespace PowerBallAI
         }
 
 
-        //***
+        //**
         //Menu strip
         //File
         private void NewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.mMap.Clear();
+            this.RenderBox_Paint(null, null);
             this.ToolStripLableStatus.Text = "New file.";
         }
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -161,7 +94,6 @@ namespace PowerBallAI
             ofd.InitialDirectory = ".."; //**
             ofd.Filter = "txt files (*.txt)|*.txt";
             ofd.FilterIndex = 1;
-            ofd.RestoreDirectory = true;
             ofd.Title = "Open AIMap from file.";
 
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -169,6 +101,7 @@ namespace PowerBallAI
 
                 if (this.mMap.Open(ofd.FileName))
                 {
+                    this.RenderBox_Paint(null, null);
                     this.ToolStripLableStatus.Text = "Successfully opened file.";
                 }
                 else
@@ -208,21 +141,31 @@ namespace PowerBallAI
         //Edit
         private void UndoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.mMap.RemoveLast(); //**använda stack, getAndRemove()**
-            this.ToolStripLableStatus.Text = "Undid:** getted.ToString**"; //**
+            if (this.mMap.RemoveLast())  //**använda stack, getAndRemove()**
+            {
+                this.ToolStripLableStatus.Text = "Undid:** getted.ToString**"; //**
+                //update renderbox
+                this.RenderBox_Paint(null, null);
+            }
+            else
+            {
+                this.ToolStripLableStatus.Text = "There's nothing to undo."; 
+            }
         }
         private void RedoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.mMap.UndoRemove(); //**använda stack**
             this.ToolStripLableStatus.Text = "Redid** getted.ToString**"; //**
+            //update renderbox
+            this.RenderBox_Paint(null, null);
         }
 
         //Areas
         //Rectangle
         private void RectangleButtonOK_Click(object sender, EventArgs e)
         {
-            //check if engine has been initialized
-            if (this.mAPILoaded)
+            //check if engine has been initialized**
+            //if (this.mAPILoaded)
             {
                 //fetch values
                 bool forbidden = Convert.ToBoolean((int)(RectangleCheckBoxForbidden.CheckState));
@@ -234,19 +177,22 @@ namespace PowerBallAI
                 //add area to map
                 this.mMap.AddArea(new Rectangle(forbidden, x, z, width, height));
                 this.ToolStripLableStatus.Text = "Added rectangle area.";
+
+                //update renderbox
+                this.RenderBox_Paint(null, null);
             }
-            else
+            //else
             {
-                MessageBox.Show("No engine has been selected!", "Warning", MessageBoxButtons.OK);
-                this.ToolStripLableStatus.Text = "Failed to add rectangle.";
+            //    MessageBox.Show("No engine has been selected!", "Warning", MessageBoxButtons.OK);
+            //    this.ToolStripLableStatus.Text = "Failed to add rectangle.";
             }
 
         }
         //Circle
         private void CircleButtonOK_Click(object sender, EventArgs e)
         {
-            //check if engine has been initialized
-            if (this.mAPILoaded)
+            //check if engine has been initialized**
+            //if (this.mAPILoaded)
             {
                 //fetch values
                 bool forbidden = Convert.ToBoolean((int)(CircleCheckBoxForbidden.CheckState));
@@ -257,12 +203,62 @@ namespace PowerBallAI
                 //add area to map
                 this.mMap.AddArea(new Circle(forbidden, x, z, radius));
                 this.ToolStripLableStatus.Text = "Added circle area.";
+
+                //update renderbox
+                this.RenderBox_Paint(null, null);
             }
-            else
+            //else
             {
-                MessageBox.Show("No engine has been selected!", "Warning", MessageBoxButtons.OK);
-                this.ToolStripLableStatus.Text = "Failed to add circle.";
+            //    MessageBox.Show("No engine has been selected!", "Warning", MessageBoxButtons.OK);
+            //    this.ToolStripLableStatus.Text = "Failed to add circle.";
             }
+        }
+
+        //Render/paint
+        private void RenderBox_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics graphics = RenderBox.CreateGraphics();
+            Color forbiddenColor = Color.FromArgb(128, 255, 0, 0);
+            Color notForbiddenColor = Color.FromArgb(128, 0, 255, 0);
+            Brush brush = new SolidBrush(Color.Black);
+           
+            //Clear renderbox
+            graphics.FillRectangle(brush, 0, 0, RenderBox.Width, RenderBox.Height);
+           
+            //Draw areas
+            for (uint i = 0; i < this.mMap.GetNrOfAreas(); i++)
+            {
+                Area area = this.mMap.GetArea(i);
+
+                if(area.IsForbidden())
+                {
+                    brush = new SolidBrush(forbiddenColor);
+                }
+                else
+                {
+                    brush = new SolidBrush(notForbiddenColor);
+                }
+
+                if (area is Rectangle)
+                {
+                    graphics.FillRectangle( brush,
+                                            area.GetX(),
+                                            area.GetZ(),
+                                            ((Rectangle)area).GetWidth(),
+                                            ((Rectangle)area).GetHeight());
+                      
+                }
+                else if (area is Circle)
+                {
+                    graphics.FillEllipse(   brush,
+                                            area.GetX(),
+                                            area.GetZ(),
+                                            ((Circle)area).GetRadius() * 2,
+                                            ((Circle)area).GetRadius() * 2);
+                      
+                }
+            }
+
         }
 
 

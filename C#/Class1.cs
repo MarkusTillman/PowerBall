@@ -100,12 +100,17 @@ namespace PowerBallAI
             }
             this.mNrOfAreas--;
         }
-        public void RemoveLast()
+        public bool RemoveLast()
         {
             if (this.mNrOfAreas > 0)
             {
                 //this.mAreas[--this.mNrOfAreas] = null;
                 this.mNrOfAreas--;
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
         public void UndoRemove()
