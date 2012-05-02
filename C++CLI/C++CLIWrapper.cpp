@@ -16,7 +16,7 @@ namespace System
 			CppCLI::~CppCLI()
 			{
 				SAFE_DELETE(this->mGameEngine);
-				//DumpMemoryLeaks();
+				myDumpMemoryLeaks();
 			}
 
 			HRESULT CppCLI::Init(IntPtr hWnd, int width, int height)

@@ -12,16 +12,31 @@ namespace PowerBallAI
 {
     public partial class form1 : Form
     {
-        CppCLI      mGameEngine = null;
+        CppCLI      mGameEngine;
         AIMap       mMap;
-        bool        mAPILoaded = false;
+        bool        mAPILoaded;
+
+        //rendering
+        Graphics    mGraphics;
+        Color       mForbiddenColor;
+        Color       mNotForbiddenColor;
+        Brush       mBrush;
+        bool        mDrawGrid;
+        bool        mUseDottedGrid;
 
         public form1()
         {
             InitializeComponent();
 
             this.mGameEngine = new CppCLI();
-            this.mMap = new AIMap(); 
+            this.mMap = new AIMap();
+            this.mAPILoaded = false;
+
+            this.mGraphics = null;
+            this.mForbiddenColor = Color.FromArgb(255, 255, 0, 0);
+            this.mNotForbiddenColor = Color.FromArgb(255, 0, 255, 0);
+            this.mBrush = new SolidBrush(Color.Black);
+            this.mDrawGrid = false;
 
             this.ResizeEnd += new EventHandler(form1_ResizeEnd);
             this.Resize += new EventHandler(form1_Resize);
@@ -217,13 +232,28 @@ namespace PowerBallAI
         //Render/paint
         private void RenderBox_Paint(object sender, PaintEventArgs e)
         {
-            Graphics graphics = RenderBox.CreateGraphics();
-            Color forbiddenColor = Color.FromArgb(128, 255, 0, 0);
-            Color notForbiddenColor = Color.FromArgb(128, 0, 255, 0);
-            Brush brush = new SolidBrush(Color.Black);
-           
+            this.mGraphics = RenderBox.CreateGraphics();
+            int alpha = Convert.ToInt32(this.TextBoxAlphaValue.Text);
+            this.mForbiddenColor = Color.FromArgb(alpha, 255, 0, 0);
+            this.mNotForbiddenColor = Color.FromArgb(alpha, 0, 255, 0);
+
             //Clear renderbox
-            graphics.FillRectangle(brush, 0, 0, RenderBox.Width, RenderBox.Height);
+            if (this.mDrawGrid)
+            {
+                if (this.mUseDottedGrid)
+                {
+                    this.mBrush = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.DottedGrid, Color.White, Color.Black);
+                }
+                else
+                {
+                    this.mBrush = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.LargeGrid, Color.White, Color.Black);
+                }
+             }
+            else
+            {
+                this.mBrush = new SolidBrush(Color.Black);
+            }
+            this.mGraphics.FillRectangle(this.mBrush, 0, 0, RenderBox.Width, RenderBox.Height);
            
             //Draw areas
             for (uint i = 0; i < this.mMap.GetNrOfAreas(); i++)
@@ -232,34 +262,115 @@ namespace PowerBallAI
 
                 if(area.IsForbidden())
                 {
-                    brush = new SolidBrush(forbiddenColor);
+                    if (this.mDrawGrid)
+                    {
+                        if (this.mUseDottedGrid)
+                        {
+                            this.mBrush = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.DottedGrid, Color.White, this.mForbiddenColor);
+                        }
+                        else
+                        {
+                            this.mBrush = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.LargeGrid, Color.White, this.mForbiddenColor);
+                        } 
+                    }
+                    else
+                    {
+                        this.mBrush = new SolidBrush(this.mForbiddenColor);
+                    }
                 }
                 else
                 {
-                    brush = new SolidBrush(notForbiddenColor);
+                    if (this.mDrawGrid)
+                    {
+                        if (this.mUseDottedGrid)
+                        {
+                            this.mBrush = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.DottedGrid, Color.White, this.mNotForbiddenColor);
+                        }
+                        else
+                        {
+                            this.mBrush = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.LargeGrid, Color.White, this.mNotForbiddenColor);
+                        }
+                    }
+                    else
+                    {
+                        this.mBrush = new SolidBrush(this.mNotForbiddenColor);
+                    }
                 }
 
                 if (area is Rectangle)
                 {
-                    graphics.FillRectangle( brush,
-                                            area.GetX(),
-                                            area.GetZ(),
-                                            ((Rectangle)area).GetWidth(),
-                                            ((Rectangle)area).GetHeight());
+                    this.mGraphics.FillRectangle(   this.mBrush,
+                                                    area.GetX(),
+                                                    area.GetZ(),
+                                                    ((Rectangle)area).GetWidth(),
+                                                    ((Rectangle)area).GetHeight());
                       
                 }
                 else if (area is Circle)
                 {
-                    graphics.FillEllipse(   brush,
-                                            area.GetX(),
-                                            area.GetZ(),
-                                            ((Circle)area).GetRadius() * 2,
-                                            ((Circle)area).GetRadius() * 2);
+                    this.mGraphics.FillEllipse( this.mBrush,
+                                                area.GetX(),
+                                                area.GetZ(),
+                                                ((Circle)area).GetRadius() * 2,
+                                                ((Circle)area).GetRadius() * 2);
                       
                 }
             }
-
         }
+
+        //Grid
+        private void CheckBoxShowGrid_CheckedChanged(object sender, EventArgs e)
+        {
+            this.mDrawGrid = Convert.ToBoolean((int)(CheckBoxShowGrid.CheckState));
+
+            if (this.mDrawGrid)
+            {
+                this.ToolStripLableStatus.Text = "Grid toggled on.";
+            }
+            else
+            {
+                this.ToolStripLableStatus.Text = "Grid toggled off.";
+            }
+
+            this.RenderBox_Paint(null, null);  //update renderbox
+        }
+        private void CheckBoxDottedGrid_CheckedChanged(object sender, EventArgs e)
+        {
+            this.mUseDottedGrid = Convert.ToBoolean((int)(CheckBoxDottedGrid.CheckState));
+
+            if (this.mUseDottedGrid)
+            {
+                this.ToolStripLableStatus.Text = "Dotted grid toggled on.";
+            }
+            else
+            {
+                this.ToolStripLableStatus.Text = "Dotted grid toggled off.";
+            }
+
+            this.RenderBox_Paint(null, null);  //update renderbox
+        }
+        private void ScrollBarGridSize_Scroll(object sender, ScrollEventArgs e)
+        {
+            this.TextBoxGridSize.Text = Convert.ToString(this.ScrollBarGridSize.Value);
+        }
+        private void TextBoxGridSize_TextChanged(object sender, EventArgs e)
+        {
+            //**TODO**
+        }
+
+        //Alpha value
+        private void ScrollBarAlpha_Scroll(object sender, ScrollEventArgs e)
+        {
+            this.TextBoxAlphaValue.Text = Convert.ToString(this.ScrollBarAlphaValue.Value);
+        }
+        private void TextBoxAlphaValue_TextChanged(object sender, EventArgs e)
+        {
+            this.RenderBox_Paint(null, null);  //update renderbox
+        }
+
+
+
+        
 
 
     }

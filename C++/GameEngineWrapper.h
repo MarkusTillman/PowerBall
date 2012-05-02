@@ -16,6 +16,7 @@ class DLL_USAGE GameEngineWrapper
 {
 	private:
 		GameEngine* mGameEngine;
+
 	public:
 		GameEngineWrapper();
 		~GameEngineWrapper();

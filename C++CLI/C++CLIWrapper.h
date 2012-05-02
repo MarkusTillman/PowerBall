@@ -28,19 +28,20 @@ namespace System
 		{
 			public ref class CppCLI
 			{
-			protected:
-				GameEngineWrapper* mGameEngine;
-			public:
-				CppCLI();
-				~CppCLI();
+				protected:
+					GameEngineWrapper* mGameEngine;
 
-				HRESULT Init(IntPtr hWnd, int width, int height);
-				HRESULT Shutdown();
+				public:
+					CppCLI();
+					~CppCLI();
 
-				HRESULT ProcessFrame();
-				HRESULT OnResize(int width, int height);
+					HRESULT Init(IntPtr hWnd, int width, int height);
+					HRESULT Shutdown();
 
-				String^ ProcessText(String^ text);
+					HRESULT ProcessFrame();
+					HRESULT OnResize(int width, int height);
+
+					String^ ProcessText(String^ text);
 			};
 		}
 	}

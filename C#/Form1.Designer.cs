@@ -66,6 +66,10 @@
             this.ToolStripLableStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.TextBoxAlphaValue = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.ScrollBarAlphaValue = new System.Windows.Forms.HScrollBar();
+            this.CheckBoxShowGrid = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label9 = new System.Windows.Forms.Label();
@@ -91,6 +95,10 @@
             this.label10 = new System.Windows.Forms.Label();
             this.CircleCheckBoxForbidden = new System.Windows.Forms.CheckBox();
             this.CircleButtonOK = new System.Windows.Forms.Button();
+            this.TextBoxGridSize = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.ScrollBarGridSize = new System.Windows.Forms.HScrollBar();
+            this.CheckBoxDottedGrid = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -374,7 +382,7 @@
             this.RenderBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RenderBox.Location = new System.Drawing.Point(0, 0);
             this.RenderBox.Name = "RenderBox";
-            this.RenderBox.Size = new System.Drawing.Size(800, 601);
+            this.RenderBox.Size = new System.Drawing.Size(800, 600);
             this.RenderBox.TabIndex = 3;
             this.RenderBox.Paint += new System.Windows.Forms.PaintEventHandler(this.RenderBox_Paint);
             // 
@@ -396,21 +404,66 @@
             // 
             // panel2
             // 
-            this.panel2.AutoSize = true;
             this.panel2.Controls.Add(this.RenderBox);
             this.panel2.Location = new System.Drawing.Point(184, 49);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(800, 601);
+            this.panel2.Size = new System.Drawing.Size(800, 600);
             this.panel2.TabIndex = 1;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.CheckBoxDottedGrid);
+            this.panel1.Controls.Add(this.TextBoxGridSize);
+            this.panel1.Controls.Add(this.label12);
+            this.panel1.Controls.Add(this.ScrollBarGridSize);
+            this.panel1.Controls.Add(this.TextBoxAlphaValue);
+            this.panel1.Controls.Add(this.label11);
+            this.panel1.Controls.Add(this.ScrollBarAlphaValue);
+            this.panel1.Controls.Add(this.CheckBoxShowGrid);
             this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 49);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(184, 601);
             this.panel1.TabIndex = 4;
+            // 
+            // TextBoxAlphaValue
+            // 
+            this.TextBoxAlphaValue.Location = new System.Drawing.Point(80, 385);
+            this.TextBoxAlphaValue.Name = "TextBoxAlphaValue";
+            this.TextBoxAlphaValue.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxAlphaValue.TabIndex = 6;
+            this.TextBoxAlphaValue.Text = "255";
+            this.TextBoxAlphaValue.TextChanged += new System.EventHandler(this.TextBoxAlphaValue_TextChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(7, 385);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(34, 13);
+            this.label11.TabIndex = 5;
+            this.label11.Text = "Alpha";
+            // 
+            // ScrollBarAlphaValue
+            // 
+            this.ScrollBarAlphaValue.Location = new System.Drawing.Point(4, 408);
+            this.ScrollBarAlphaValue.Maximum = 255;
+            this.ScrollBarAlphaValue.Name = "ScrollBarAlphaValue";
+            this.ScrollBarAlphaValue.Size = new System.Drawing.Size(176, 17);
+            this.ScrollBarAlphaValue.TabIndex = 4;
+            this.ScrollBarAlphaValue.Scroll += new System.Windows.Forms.ScrollEventHandler(this.ScrollBarAlpha_Scroll);
+            // 
+            // CheckBoxShowGrid
+            // 
+            this.CheckBoxShowGrid.AutoSize = true;
+            this.CheckBoxShowGrid.Location = new System.Drawing.Point(10, 302);
+            this.CheckBoxShowGrid.Name = "CheckBoxShowGrid";
+            this.CheckBoxShowGrid.Size = new System.Drawing.Size(75, 17);
+            this.CheckBoxShowGrid.TabIndex = 3;
+            this.CheckBoxShowGrid.Text = "Show Grid";
+            this.CheckBoxShowGrid.UseVisualStyleBackColor = true;
+            this.CheckBoxShowGrid.CheckedChanged += new System.EventHandler(this.CheckBoxShowGrid_CheckedChanged);
             // 
             // tabControl1
             // 
@@ -658,6 +711,44 @@
             this.CircleButtonOK.UseVisualStyleBackColor = true;
             this.CircleButtonOK.Click += new System.EventHandler(this.CircleButtonOK_Click);
             // 
+            // TextBoxGridSize
+            // 
+            this.TextBoxGridSize.Location = new System.Drawing.Point(80, 342);
+            this.TextBoxGridSize.Name = "TextBoxGridSize";
+            this.TextBoxGridSize.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxGridSize.TabIndex = 9;
+            this.TextBoxGridSize.Text = "derp";
+            this.TextBoxGridSize.TextChanged += new System.EventHandler(this.TextBoxGridSize_TextChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(7, 342);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(47, 13);
+            this.label12.TabIndex = 8;
+            this.label12.Text = "Grid size";
+            // 
+            // ScrollBarGridSize
+            // 
+            this.ScrollBarGridSize.Location = new System.Drawing.Point(4, 365);
+            this.ScrollBarGridSize.Maximum = 255;
+            this.ScrollBarGridSize.Name = "ScrollBarGridSize";
+            this.ScrollBarGridSize.Size = new System.Drawing.Size(176, 17);
+            this.ScrollBarGridSize.TabIndex = 7;
+            this.ScrollBarGridSize.Scroll += new System.Windows.Forms.ScrollEventHandler(this.ScrollBarGridSize_Scroll);
+            // 
+            // CheckBoxDottedGrid
+            // 
+            this.CheckBoxDottedGrid.AutoSize = true;
+            this.CheckBoxDottedGrid.Location = new System.Drawing.Point(88, 302);
+            this.CheckBoxDottedGrid.Name = "CheckBoxDottedGrid";
+            this.CheckBoxDottedGrid.Size = new System.Drawing.Size(80, 17);
+            this.CheckBoxDottedGrid.TabIndex = 10;
+            this.CheckBoxDottedGrid.Text = "Dotted Grid";
+            this.CheckBoxDottedGrid.UseVisualStyleBackColor = true;
+            this.CheckBoxDottedGrid.CheckedChanged += new System.EventHandler(this.CheckBoxDottedGrid_CheckedChanged);
+            // 
             // form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -684,6 +775,7 @@
             this.statusStrip1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -758,6 +850,14 @@
         private System.Windows.Forms.Button CircleButtonOK;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox MoveTextBoxIndex;
+        private System.Windows.Forms.CheckBox CheckBoxShowGrid;
+        private System.Windows.Forms.HScrollBar ScrollBarAlphaValue;
+        private System.Windows.Forms.TextBox TextBoxAlphaValue;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox TextBoxGridSize;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.HScrollBar ScrollBarGridSize;
+        private System.Windows.Forms.CheckBox CheckBoxDottedGrid;
     }
 }
 
