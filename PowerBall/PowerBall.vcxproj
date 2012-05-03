@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\AI\AIMap.cpp" />
+    <ClCompile Include="..\Source\AI\AStarSearch.cpp" />
     <ClCompile Include="..\Source\Ball.cpp" />
     <ClCompile Include="..\Source\Flag.cpp" />
     <ClCompile Include="..\Source\GameManager.cpp" />
@@ -74,6 +76,8 @@
     <ClCompile Include="..\Source\SoundEngine\SoundEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\AI\AIMap.h" />
+    <ClInclude Include="..\Source\AI\AStarSearch.h" />
     <ClInclude Include="..\Source\Ball.h" />
     <ClInclude Include="..\Source\Flag.h" />
     <ClInclude Include="..\Source\GameManager.h" />

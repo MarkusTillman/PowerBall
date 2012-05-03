@@ -36,6 +36,9 @@
     <Filter Include="Sound Engine Files">
       <UniqueIdentifier>{a4843cc2-979d-4f6c-9809-013d07a66b92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{91110f22-8c3c-43d7-8283-ebc02557b907}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\main.cpp">
@@ -196,6 +199,12 @@
     </ClCompile>
     <ClCompile Include="..\Source\GUI\TextBox.cpp">
       <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\AI\AIMap.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\AI\AStarSearch.cpp">
+      <Filter>AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -372,6 +381,12 @@
     </ClInclude>
     <ClInclude Include="..\Source\GUI\TextBox.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\AI\AIMap.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\AI\AStarSearch.h">
+      <Filter>AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
