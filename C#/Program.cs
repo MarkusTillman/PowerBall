@@ -17,7 +17,7 @@ namespace PowerBallAI
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new form1());
 
-            form1 form = new form1();
+            Form1 form = new Form1();
             form.Show();
             form.GameLoop();
         }

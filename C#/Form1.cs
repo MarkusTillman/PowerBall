@@ -10,36 +10,44 @@ using System.Windows.Interop;
 
 namespace PowerBallAI
 {
-    public partial class form1 : Form
+    public partial class Form1 : Form
     {
         CppCLI      mGameEngine;
         AIMap       mMap;
         bool        mAPILoaded;
-
-        //rendering
         Graphics    mGraphics;
         Color       mForbiddenColor;
         Color       mNotForbiddenColor;
         Brush       mBrush;
-        bool        mDrawGrid;
-        bool        mUseDottedGrid;
+        bool        mShowGrid;
+        float       mGridSize;
+        float       mCameraPosX;
+        float       mCameraPosZ;
 
-        public form1()
+        public Form1()
         {
             InitializeComponent();
 
+            //member variables
             this.mGameEngine = new CppCLI();
             this.mMap = new AIMap();
             this.mAPILoaded = false;
-
             this.mGraphics = null;
             this.mForbiddenColor = Color.FromArgb(255, 255, 0, 0);
             this.mNotForbiddenColor = Color.FromArgb(255, 0, 255, 0);
             this.mBrush = new SolidBrush(Color.Black);
-            this.mDrawGrid = false;
+            this.mShowGrid = false;
+            this.mGridSize = 5;
+            this.mCameraPosX = 0.0f;
+            this.mCameraPosZ = 0.0f;
 
-            this.ResizeEnd += new EventHandler(form1_ResizeEnd);
-            this.Resize += new EventHandler(form1_Resize);
+            //input
+            this.KeyPreview = true;
+            this.KeyPress += new KeyPressEventHandler(Form1_KeyPress);
+
+            //window
+            this.ResizeEnd += new EventHandler(Form1_ResizeEnd);
+            this.Resize += new EventHandler(Form1_Resize);
         }
 
         public void GameLoop()
@@ -60,7 +68,8 @@ namespace PowerBallAI
             }
         }
 
-        void form1_Resize(object sender, EventArgs e)
+        //window
+        void Form1_Resize(object sender, EventArgs e)
         {
             //Hantera när maximize knappen trycks
             if (this.WindowState == FormWindowState.Maximized)
@@ -73,13 +82,34 @@ namespace PowerBallAI
                 this.mGameEngine.OnResize(RenderBox.Width, RenderBox.Height);
             }
         }
-
-        void form1_ResizeEnd(object sender, EventArgs e)
+        void Form1_ResizeEnd(object sender, EventArgs e)
         {
             this.mGameEngine.OnResize(RenderBox.Width, RenderBox.Height);
         }
 
+        //Key input
+        void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            switch (Convert.ToInt32(e.KeyChar))
+            {
+                case 97: //a
+                    this.mCameraPosX--; //**tmp, call gameengine**
+                break; 
+                case 100: //d
+                    this.mCameraPosX++; //**tmp, call gameengine**
+                    break;
+                case 115: //s
+                    this.mCameraPosZ--; //**tmp, call gameengine**
+                    break;
+                case 119: //w
+                    this.mCameraPosZ++; //**tmp, call gameengine**
+                    break;
+                default: break;
+            }
+            this.RenderBox_Paint(null, null);
+        }
        
+        //Load game engine **prel**
         private void InitAPI_Click(object sender, EventArgs e)
         {
             if(apiToLoad.Text == "HGE")
@@ -238,21 +268,7 @@ namespace PowerBallAI
             this.mNotForbiddenColor = Color.FromArgb(alpha, 0, 255, 0);
 
             //Clear renderbox
-            if (this.mDrawGrid)
-            {
-                if (this.mUseDottedGrid)
-                {
-                    this.mBrush = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.DottedGrid, Color.White, Color.Black);
-                }
-                else
-                {
-                    this.mBrush = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.LargeGrid, Color.White, Color.Black);
-                }
-             }
-            else
-            {
-                this.mBrush = new SolidBrush(Color.Black);
-            }
+            this.mBrush = new SolidBrush(Color.Black);
             this.mGraphics.FillRectangle(this.mBrush, 0, 0, RenderBox.Width, RenderBox.Height);
            
             //Draw areas
@@ -262,46 +278,18 @@ namespace PowerBallAI
 
                 if(area.IsForbidden())
                 {
-                    if (this.mDrawGrid)
-                    {
-                        if (this.mUseDottedGrid)
-                        {
-                            this.mBrush = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.DottedGrid, Color.White, this.mForbiddenColor);
-                        }
-                        else
-                        {
-                            this.mBrush = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.LargeGrid, Color.White, this.mForbiddenColor);
-                        } 
-                    }
-                    else
-                    {
-                        this.mBrush = new SolidBrush(this.mForbiddenColor);
-                    }
+                    this.mBrush = new SolidBrush(this.mForbiddenColor);
                 }
                 else
                 {
-                    if (this.mDrawGrid)
-                    {
-                        if (this.mUseDottedGrid)
-                        {
-                            this.mBrush = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.DottedGrid, Color.White, this.mNotForbiddenColor);
-                        }
-                        else
-                        {
-                            this.mBrush = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.LargeGrid, Color.White, this.mNotForbiddenColor);
-                        }
-                    }
-                    else
-                    {
-                        this.mBrush = new SolidBrush(this.mNotForbiddenColor);
-                    }
+                    this.mBrush = new SolidBrush(this.mNotForbiddenColor);
                 }
 
                 if (area is Rectangle)
                 {
                     this.mGraphics.FillRectangle(   this.mBrush,
-                                                    area.GetX(),
-                                                    area.GetZ(),
+                                                    area.GetX() - this.mCameraPosX,
+                                                    area.GetZ() + this.mCameraPosZ,
                                                     ((Rectangle)area).GetWidth(),
                                                     ((Rectangle)area).GetHeight());
                       
@@ -309,11 +297,34 @@ namespace PowerBallAI
                 else if (area is Circle)
                 {
                     this.mGraphics.FillEllipse( this.mBrush,
-                                                area.GetX(),
-                                                area.GetZ(),
+                                                area.GetX() - this.mCameraPosX,
+                                                area.GetZ() + this.mCameraPosZ,
                                                 ((Circle)area).GetRadius() * 2,
                                                 ((Circle)area).GetRadius() * 2);
                       
+                }
+            }
+            //draw grid
+            if (this.mShowGrid)
+            {
+                uint nrOfPointsX = (uint)(RenderBox.Width / this.mGridSize) + 1;
+                uint nrOfPointsZ = (uint)((RenderBox.Height) / this.mGridSize) + 1;
+                int xOffset = (int)mGridSize;
+                int zOffset = (int)mGridSize;
+
+                int xPos = -1;
+                for (uint i = 0; i < nrOfPointsX; i++)
+                {
+                    xPos = (int)(this.mGridSize * i + xOffset);
+                    this.mGraphics.DrawLine(new Pen(Color.White), new Point(xPos, 0), new Point(xPos, RenderBox.Height));
+                    i++;
+                }
+                int yPos = -1;
+                for (uint i = 0; i < nrOfPointsZ; i++)
+                {
+                    yPos = (int)(this.mGridSize * i + zOffset);
+                    this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, yPos), new Point(RenderBox.Width, yPos));
+                    i++;
                 }
             }
         }
@@ -321,9 +332,9 @@ namespace PowerBallAI
         //Grid
         private void CheckBoxShowGrid_CheckedChanged(object sender, EventArgs e)
         {
-            this.mDrawGrid = Convert.ToBoolean((int)(CheckBoxShowGrid.CheckState));
+            this.mShowGrid = Convert.ToBoolean((int)(CheckBoxShowGrid.CheckState));
 
-            if (this.mDrawGrid)
+            if (this.mShowGrid)
             {
                 this.ToolStripLableStatus.Text = "Grid toggled on.";
             }
@@ -334,28 +345,16 @@ namespace PowerBallAI
 
             this.RenderBox_Paint(null, null);  //update renderbox
         }
-        private void CheckBoxDottedGrid_CheckedChanged(object sender, EventArgs e)
-        {
-            this.mUseDottedGrid = Convert.ToBoolean((int)(CheckBoxDottedGrid.CheckState));
-
-            if (this.mUseDottedGrid)
-            {
-                this.ToolStripLableStatus.Text = "Dotted grid toggled on.";
-            }
-            else
-            {
-                this.ToolStripLableStatus.Text = "Dotted grid toggled off.";
-            }
-
-            this.RenderBox_Paint(null, null);  //update renderbox
-        }
         private void ScrollBarGridSize_Scroll(object sender, ScrollEventArgs e)
         {
-            this.TextBoxGridSize.Text = Convert.ToString(this.ScrollBarGridSize.Value);
+            this.TextBoxGridSize.Text = Convert.ToString((float)this.ScrollBarGridSize.Value / (float)10); //update scroll bar text
         }
         private void TextBoxGridSize_TextChanged(object sender, EventArgs e)
         {
-            //**TODO**
+            this.mGridSize = (float)Convert.ToDouble(this.TextBoxGridSize.Text); //set gridsize 
+            this.ScrollBarGridSize.Value = (int)(this.mGridSize * 10); //update scroll bar value
+           
+            this.RenderBox_Paint(null, null);  //update renderbox
         }
 
         //Alpha value
