@@ -144,7 +144,12 @@ namespace PowerBallAI
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-
+                //grid size
+                TextReader textReader = new StreamReader(ofd.FileName);
+                this.mGridSize = (float)Convert.ToDouble(textReader.ReadLine());
+                RenderBox_Paint(null, null); //update renderbox
+                textReader.Close();
+                //areas
                 if (this.mMap.Open(ofd.FileName))
                 {
                     this.RenderBox_Paint(null, null);
@@ -373,10 +378,18 @@ namespace PowerBallAI
         }
         private void TextBoxGridSize_TextChanged(object sender, EventArgs e)
         {
-            this.mGridSize = (float)Convert.ToDouble(this.TextBoxGridSize.Text); //set gridsize  **
-            this.ScrollBarGridSize.Value = (int)(this.mGridSize * 10); //update scroll bar value
-           
-            this.RenderBox_Paint(null, null);  //update renderbox
+            try
+            {
+                this.mGridSize = (float)Convert.ToDouble(this.TextBoxGridSize.Text); //set gridsize  **
+                this.ScrollBarGridSize.Value = (int)(this.mGridSize * 10); //update scroll bar value
+                this.RenderBox_Paint(null, null);  //update renderbox
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: Grid size value must be between 0.1 and 25. Original Error: " + ex.Message);
+                this.TextBoxGridSize.Text = "5";
+                this.ScrollBarGridSize.Value = 5;
+            }
         }
 
         //Alpha value
@@ -386,7 +399,17 @@ namespace PowerBallAI
         }
         private void TextBoxAlphaValue_TextChanged(object sender, EventArgs e)
         {
-            this.RenderBox_Paint(null, null);  //update renderbox
+            try
+            {
+                this.ScrollBarAlphaValue.Value = Convert.ToInt32(this.TextBoxAlphaValue.Text); //update scroll bar value
+                this.RenderBox_Paint(null, null);  //update renderbox
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: Alpha value must be between 0 and 255. Original Error: " + ex.Message);
+                this.TextBoxAlphaValue.Text = "0";
+                this.ScrollBarAlphaValue.Value = 0;
+            }
         }
 
 

@@ -77,7 +77,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\AI\AIMap.h" />
+    <ClInclude Include="..\Source\AI\AIArea.h" />
     <ClInclude Include="..\Source\AI\AStarSearch.h" />
+    <ClInclude Include="..\Source\AI\AICircle.h" />
+    <ClInclude Include="..\Source\AI\AIRectangle.h" />
     <ClInclude Include="..\Source\Ball.h" />
     <ClInclude Include="..\Source\Flag.h" />
     <ClInclude Include="..\Source\GameManager.h" />

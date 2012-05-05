@@ -2,6 +2,7 @@
 #include "MainMenu.h"
 #include "GraphicsEngine.h"
 #include "SoundEngine\SoundEngine.h"
+#include "AI\AIMap.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, LPWSTR, int nCmdShow)
 {
@@ -16,16 +17,20 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, LPWSTR, int nCmdShow)
 	params.windowWidth = 1500;
 	params.FXAAQuality = 0;			// 0 - 4
 	params.ShadowMapSettings = 0;	// 0 - 10 (works with higher but VERY consuming)
-	params.CamType = RTS;
+	params.CamType = FPS;
 	
 	// Create the graphics engine
 	GraphicsEngine* ge = new GraphicsEngine(params, hInstance, nCmdShow);
 	gfxeng::eng = ge; // Set the global eng to our engine so that GetGraphicsEngine(); can work.
 	ge->CreateSkyBox("Media/skymap.dds");
 	
-	//#define LOLTEST
+	#define LOLTEST
 	#ifdef LOLTEST
 	
+	AIMap* aiMap = new AIMap();
+	aiMap->LoadFromFile("../AIMap.txt");
+	delete aiMap;
+
 	// Example of GE useage
 	GraphicsEngine* eng = GetGraphicsEngine();
 	eng->GetCamera()->setPosition(D3DXVECTOR3(0, 15, -15.6));

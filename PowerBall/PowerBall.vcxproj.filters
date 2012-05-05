@@ -388,6 +388,15 @@
     <ClInclude Include="..\Source\AI\AStarSearch.h">
       <Filter>AI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\AI\AIArea.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\AI\AICircle.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\AI\AIRectangle.h">
+      <Filter>AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\DebugNormals.fx">

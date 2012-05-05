@@ -19,7 +19,7 @@ C:\Users\Administrator\Desktop\scriptProject - Copy\C# Example\Example\Code\C#\o
 C:\Users\Administrator\Desktop\Årskurs 2\termin 2\läsperiod 2\DV1411 litet spelprojekt\PowerBall\PowerBallAI\Bin\x86\Example.exe
 C:\Users\Administrator\Desktop\Årskurs 2\termin 2\läsperiod 2\DV1411 litet spelprojekt\PowerBall\PowerBallAI\Bin\x86\Example.pdb
 C:\Users\Administrator\Desktop\Årskurs 2\termin 2\läsperiod 2\DV1411 litet spelprojekt\PowerBall\PowerBallAI\PowerBall\C#\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Administrator\Desktop\Årskurs 2\termin 2\läsperiod 2\DV1411 litet spelprojekt\PowerBall\PowerBallAI\PowerBall\C#\obj\x86\Debug\PowerBallAI.form1.resources
+C:\Users\Administrator\Desktop\Årskurs 2\termin 2\läsperiod 2\DV1411 litet spelprojekt\PowerBall\PowerBallAI\PowerBall\C#\obj\x86\Debug\PowerBallAI.Form1.resources
 C:\Users\Administrator\Desktop\Årskurs 2\termin 2\läsperiod 2\DV1411 litet spelprojekt\PowerBall\PowerBallAI\PowerBall\C#\obj\x86\Debug\PowerBallAI.Properties.Resources.resources
 C:\Users\Administrator\Desktop\Årskurs 2\termin 2\läsperiod 2\DV1411 litet spelprojekt\PowerBall\PowerBallAI\PowerBall\C#\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\Users\Administrator\Desktop\Årskurs 2\termin 2\läsperiod 2\DV1411 litet spelprojekt\PowerBall\PowerBallAI\PowerBall\C#\obj\x86\Debug\GenerateResource.write.1.tlog
