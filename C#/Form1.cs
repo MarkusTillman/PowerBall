@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Interop;
+using System.IO;
 
 namespace PowerBallAI
 {
@@ -164,7 +165,12 @@ namespace PowerBallAI
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                if (this.mMap.Save(sfd.FileName))
+                //grid size
+                TextWriter textWriter = new StreamWriter(sfd.FileName);
+                textWriter.WriteLine(this.mGridSize);
+                textWriter.Close();
+                //areas
+                if (this.mMap.Save(sfd.FileName, true))
                 {
                     this.ToolStripLableStatus.Text = "Successfully saved file.";
                 }
@@ -288,8 +294,8 @@ namespace PowerBallAI
                 if (area is Rectangle)
                 {
                     this.mGraphics.FillRectangle(   this.mBrush,
-                                                    area.GetX() - this.mCameraPosX,
-                                                    area.GetZ() + this.mCameraPosZ,
+                                                    area.GetX() + (float)this.RenderBox.Width * 0.5f - ((Rectangle)area).GetWidth() * 0.5f - this.mCameraPosX,
+                                                    -area.GetZ() + (float)this.RenderBox.Height * 0.5f - ((Rectangle)area).GetHeight() * 0.5f + this.mCameraPosZ,
                                                     ((Rectangle)area).GetWidth(),
                                                     ((Rectangle)area).GetHeight());
                       
@@ -297,8 +303,8 @@ namespace PowerBallAI
                 else if (area is Circle)
                 {
                     this.mGraphics.FillEllipse( this.mBrush,
-                                                area.GetX() - this.mCameraPosX,
-                                                area.GetZ() + this.mCameraPosZ,
+                                                area.GetX() + (float)this.RenderBox.Width * 0.5f - ((Circle)area).GetRadius() - this.mCameraPosX,
+                                                -area.GetZ() + (float)this.RenderBox.Height * 0.5f - ((Circle)area).GetRadius() + this.mCameraPosZ,
                                                 ((Circle)area).GetRadius() * 2,
                                                 ((Circle)area).GetRadius() * 2);
                       

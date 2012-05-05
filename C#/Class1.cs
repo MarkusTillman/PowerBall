@@ -117,7 +117,7 @@ namespace PowerBallAI
         {
             this.mNrOfAreas++;
         }
-        public bool Save(string filename)
+        public bool Save(string filename, bool append)
         {
             if (this.mNrOfAreas == 0)
             {
@@ -125,7 +125,15 @@ namespace PowerBallAI
             }
             try
             {
-                TextWriter textWriter = new StreamWriter(filename);
+                TextWriter textWriter = null;
+                if (append)
+                {
+                    textWriter = File.AppendText(filename);
+                }
+                else
+                {
+                    textWriter = new StreamWriter(filename);
+                }
 
                 textWriter.WriteLine(this.mNrOfAreas);
                 for (uint i = 0; i < this.mNrOfAreas; i++)

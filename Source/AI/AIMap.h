@@ -24,7 +24,8 @@ class AIMap
 		};
 
 	private:
-		float mGridSize;
+		float					mGridSize; //grid size in world coordinates
+		MaloW::Array<Node*>*	mNodes;
 
 	public:
 		AIMap();
