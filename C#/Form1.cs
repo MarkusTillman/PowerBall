@@ -307,24 +307,40 @@ namespace PowerBallAI
             //draw grid
             if (this.mShowGrid)
             {
-                uint nrOfPointsX = (uint)(RenderBox.Width / this.mGridSize) + 1;
-                uint nrOfPointsZ = (uint)((RenderBox.Height) / this.mGridSize) + 1;
-                int xOffset = (int)mGridSize;
-                int zOffset = (int)mGridSize;
+                float xPos = -1.0f;
+                float zPos = -1.0f;
 
-                int xPos = -1;
-                for (uint i = 0; i < nrOfPointsX; i++)
+                xPos = (int)((float)this.RenderBox.Width / (float)2 - this.mCameraPosX);
+                this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos - 1, 0), new Point((int)xPos - 1, RenderBox.Height));
+                this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos, 0), new Point((int)xPos, RenderBox.Height));
+                this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos + 1, 0), new Point((int)xPos + 1, RenderBox.Height));
+                zPos = (int)((float)this.RenderBox.Height / (float)2 + this.mCameraPosZ);
+                this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos - 1), new Point(RenderBox.Width, (int)zPos - 1));
+                this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos), new Point(RenderBox.Width, (int)zPos));
+                this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos + 1), new Point(RenderBox.Width, (int)zPos + 1));
+
+                while (xPos < RenderBox.Width)
                 {
-                    xPos = (int)(this.mGridSize * i + xOffset);
-                    this.mGraphics.DrawLine(new Pen(Color.White), new Point(xPos, 0), new Point(xPos, RenderBox.Height));
-                    i++;
+                    xPos += this.mGridSize;
+                    this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos, 0), new Point((int)xPos, RenderBox.Height));
                 }
-                int yPos = -1;
-                for (uint i = 0; i < nrOfPointsZ; i++)
+                xPos = (int)((float)this.RenderBox.Width / (float)2 - this.mCameraPosX);
+                while (xPos > 0)
                 {
-                    yPos = (int)(this.mGridSize * i + zOffset);
-                    this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, yPos), new Point(RenderBox.Width, yPos));
-                    i++;
+                    xPos -= this.mGridSize;
+                    this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos, 0), new Point((int)xPos, RenderBox.Height));
+                }
+
+                while (zPos < RenderBox.Height)
+                {
+                    zPos += this.mGridSize;
+                    this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos), new Point(RenderBox.Width, (int)zPos));
+                } 
+                zPos = (int)((float)this.RenderBox.Height / (float)2 + this.mCameraPosZ);
+                while (zPos > 0)
+                {
+                    zPos -= this.mGridSize;
+                    this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos), new Point(RenderBox.Width, (int)zPos));
                 }
             }
         }
@@ -351,7 +367,7 @@ namespace PowerBallAI
         }
         private void TextBoxGridSize_TextChanged(object sender, EventArgs e)
         {
-            this.mGridSize = (float)Convert.ToDouble(this.TextBoxGridSize.Text); //set gridsize 
+            this.mGridSize = (float)Convert.ToDouble(this.TextBoxGridSize.Text); //set gridsize  **
             this.ScrollBarGridSize.Value = (int)(this.mGridSize * 10); //update scroll bar value
            
             this.RenderBox_Paint(null, null);  //update renderbox

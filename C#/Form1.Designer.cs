@@ -451,7 +451,7 @@
             this.ScrollBarGridSize.Name = "ScrollBarGridSize";
             this.ScrollBarGridSize.Size = new System.Drawing.Size(176, 17);
             this.ScrollBarGridSize.TabIndex = 7;
-            this.ScrollBarGridSize.Value = 5;
+            this.ScrollBarGridSize.Value = 50;
             this.ScrollBarGridSize.Scroll += new System.Windows.Forms.ScrollEventHandler(this.ScrollBarGridSize_Scroll);
             // 
             // TextBoxAlphaValue
