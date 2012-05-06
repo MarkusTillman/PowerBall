@@ -39,6 +39,8 @@ public:
 
 	/*! Starts the game with the assigned amount of players. */
 	bool		Play(const int numPlayers);
+	
+	bool		UpdateEditor();
 
 	/*! Starts LAN game with the assigned amount of players. */
 	bool		PlayLAN(ServerInfo server);

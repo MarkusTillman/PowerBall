@@ -44,7 +44,44 @@ GraphicsEngine::GraphicsEngine(GraphicsEngineParams params, HINSTANCE hInstance,
 
 	this->Start();
 }
+	//for wrapper
+GraphicsEngine::GraphicsEngine(GraphicsEngineParams params, HWND hwnd)
+{
+	if(!this->initDone)
+	{
+		//this->sound = new SoundEngine();
+		this->sound = NULL;
+		this->parameters = params;
+		this->cam = NULL;
+		this->dx = NULL;
+		this->hInstance = NULL;
+		this->hWnd = NULL;
 
+		this->keepRunning = true;
+		this->loading = false;
+
+		LARGE_INTEGER li;
+		if(!QueryPerformanceFrequency(&li))
+			MaloW::Debug("QueryPerformanceFrequency Failed!, High resolution performance counter not available?");
+
+		this->PCFreq = float(li.QuadPart)/1000.0f;
+		QueryPerformanceCounter(&li);
+		this->prevTimeStamp = li.QuadPart;
+
+
+
+		this->prevFrameCount = 0;
+		this->fpsLast = 0;
+		this->fpsTimer = 0;
+	}
+	
+	this->InitWindow(hwnd);
+	//this->hWnd = hwnd;
+	//this->InitObjects();
+	//this->initDone = true;
+	
+	this->Start();
+}
 GraphicsEngine::~GraphicsEngine()
 {
 	// Close self thread.
@@ -66,7 +103,7 @@ LRESULT CALLBACK GraphicsEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam,
 	HDC hdc;
 	
 	switch (message) 
-	{
+	{/*
 		case WM_KEYDOWN:
 			if(kl)
 				kl->KeyDown(wParam);
@@ -81,7 +118,13 @@ LRESULT CALLBACK GraphicsEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam,
 		case WM_KEYUP:
 			if(kl)
 				kl->KeyUp(wParam);
-
+				*/
+		/*case WM_SETFOCUS:
+			::SetFocus(GetParent(GetParent(hWnd)));
+			break;
+		case WM_KILLFOCUS:
+			::SetFocus(GetParent(GetParent(hWnd)));
+			break;*//*
 		case WM_PAINT:
 			hdc = BeginPaint(hWnd, &ps);
 			EndPaint(hWnd, &ps);
@@ -90,7 +133,7 @@ LRESULT CALLBACK GraphicsEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam,
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			break;
-
+			
 		// Mouse
 		case WM_LBUTTONDOWN:
 			if(kl)
@@ -109,15 +152,71 @@ LRESULT CALLBACK GraphicsEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam,
 			if(kl)
 				kl->MouseUp(2);
 			break;
-
+			*/
 		default:
+			//::SendMessage(GetParent(GetParent(hWnd)), message, wParam, lParam);
 			return DefWindowProc(hWnd, message, wParam, lParam);
 	}
-
+	
 	return 0;
 }
 
-HRESULT GraphicsEngine::InitWindow(HINSTANCE hInstance, int nCmdShow)
+HRESULT GraphicsEngine::InitWindow(HWND parent)
+{
+	
+	this->hInstance = ::GetModuleHandle(NULL);
+
+	// Register class
+	WNDCLASSEX wcex;
+	wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.style          = CS_HREDRAW | CS_VREDRAW; //CS_PARENTDC;//
+	wcex.lpfnWndProc    = this->WndProc;
+	wcex.cbClsExtra     = 0;
+	wcex.cbWndExtra     = 0;
+	wcex.hInstance      = this->hInstance;
+	wcex.hIcon          = 0;
+	wcex.hCursor        = LoadCursor(NULL, IDC_ARROW);
+	wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
+	wcex.lpszMenuName   = NULL;
+	wcex.lpszClassName  = "GraphicsEngine";
+	wcex.hIconSm        = 0;
+	if( !RegisterClassEx(&wcex) )
+		return E_FAIL;
+	
+	hWndParent = parent;
+	// Create window
+	RECT rc = { 0, 0, this->parameters.windowWidth, this->parameters.windowHeight };
+	//AdjustWindowRect( &rc, WS_CHILD, FALSE );
+	RECT rect;
+	GetWindowRect(parent,
+  &rect);
+
+//WS_CHILD, WS_POPUP | WS_VISIBLE
+	this->hWnd = CreateWindow("GraphicsEngine", "GraphicsEngine - Direct3D 11.0", WS_POPUP | WS_VISIBLE , rect.left, rect.top, rc.right - rc.left, rc.bottom - rc.top, parent, NULL, this->hInstance, NULL);
+	if(!this->hWnd)
+		return E_FAIL;
+	//SetParent(this->hWnd, parent);
+	//ShowWindow(this->hWnd, SW_SHOW);
+	//SetActiveWindow(GetParent(parent));
+	//::SetFocus(GetParent(parent));
+	//::SetForegroundWindow(GetParent(parent));
+	//EnableWindow(this->hWnd, FALSE);
+	//MoveWindow(this->hWnd, 500, 500, rc.right - rc.left, rc.bottom - rc.top, false);
+	MSG msg = {0};
+	while(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))		// changed from if to while, cuz I wanna clear the msg log because inputs are more important than FPS.
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		if(msg.message == WM_QUIT)
+			this->keepRunning = false;
+	}
+	this->InitObjects();
+
+	this->initDone = true;
+	return S_OK;
+}
+
+HRESULT GraphicsEngine::InitWindow(HINSTANCE hI, int nCmdShow)
 {
 	this->hInstance = hInstance;
 
@@ -160,7 +259,7 @@ HRESULT GraphicsEngine::InitWindow(HINSTANCE hInstance, int nCmdShow)
 void GraphicsEngine::InitObjects()
 {
 	this->dx = new DxManager(this->hWnd, this->parameters, this->cam);
-	this->kl = new MaloW::KeyListener(this->hWnd);
+	this->kl = NULL;//new MaloW::KeyListener(this->hWnd); //
 
 	if(this->sound)
 		this->sound->Init();
@@ -176,6 +275,10 @@ void GraphicsEngine::InitObjects()
 	else if(this->parameters.CamType == TRD)
 	{
 		this->cam = new TRDCamera(this->hWnd, this->parameters);
+	}
+	else if(this->parameters.CamType == ORTHO)
+	{
+		this->cam = new ORTHOCamera(this->hWnd, this->parameters);
 	}
 	this->dx->SetCamera(this->cam);
 
@@ -267,6 +370,12 @@ float GraphicsEngine::Update()
 		if(msg.message == WM_QUIT)
 			this->keepRunning = false;
 	}
+	RECT rect;
+	GetWindowRect(hWndParent, &rect);
+	RECT rect2;
+	GetWindowRect(hWnd, &rect2);
+	if((rect.top == rect2.top && rect.left == rect2.left) == false)
+		MoveWindow(this->hWnd, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, false);
 	
 	// Timer
 	LARGE_INTEGER li;
@@ -290,7 +399,7 @@ float GraphicsEngine::Update()
 		MaloW::convertNrToString(this->dx->GetCamera()->getPosition().y) + " " + 
 		MaloW::convertNrToString(this->dx->GetCamera()->getPosition().z) + "    -    Triangle Count: " + MaloW::convertNrToString((float)this->dx->GetTriangleCount());
 
-	SetWindowText(this->hWnd, txt.c_str());
+	//SetWindowText(this->hWnd, txt.c_str());
 
 	return diff;
 }

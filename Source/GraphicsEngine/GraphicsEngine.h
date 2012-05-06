@@ -11,6 +11,7 @@ Singleton.
 #include "FPSCamera.h"
 #include "RTSCamera.h"
 #include "TRDCamera.h"
+#include "ORTHOCamera.h"
 #include "Image.h"
 #include "CamRecording.h"
 #include "SoundEngine/SoundEngine.h"
@@ -56,6 +57,7 @@ public:
 class GraphicsEngine : public MaloW::Process
 {
 private:
+HWND hWndParent;
 	static bool initDone;
 	static DxManager* dx;
 	static HINSTANCE hInstance;
@@ -74,6 +76,7 @@ private:
 	GraphicsEngineParams parameters;
 
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
+	HRESULT InitWindow(HWND parent);
 	void InitObjects();
 
 
@@ -83,6 +86,8 @@ private:
 
 public:
 	GraphicsEngine(GraphicsEngineParams params, HINSTANCE hInstance, int nCmdShow);
+	/*! For wrapper*/
+	GraphicsEngine(GraphicsEngineParams params, HWND hwnd);
 	virtual ~GraphicsEngine();
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

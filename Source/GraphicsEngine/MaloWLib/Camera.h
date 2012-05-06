@@ -53,22 +53,24 @@ public:
 	float getPosX();
 	float getPosY();
 	float getPosZ();
-
-
-	void setPosition(D3DXVECTOR3 pos);
-	void setPosX(float x);
-	void setPosY(float y);
-	void setPosZ(float z);
-
+	D3DXVECTOR3 getUpVector();
 	D3DXVECTOR3 getForward();
-	void setForward(D3DXVECTOR3 forward);
-	void LookAt(D3DXVECTOR3 target);
+	float GetSpeed() const { return this->speed; }
+	float GetSensitivity() const { return this->sensitivity; }
+
+
+	virtual void setPosition(D3DXVECTOR3 pos);
+	virtual void setPosX(float x);
+	virtual void setPosY(float y);
+	virtual void setPosZ(float z);
+
+	virtual void setForward(D3DXVECTOR3 forward);
+	virtual void LookAt(D3DXVECTOR3 target);
 
 	virtual void update(float delta);
 	virtual void updateSpecific(float delta) = 0;
 
-	D3DXVECTOR3 getUpVector();
-	void setUpVector(D3DXVECTOR3 up);
+	virtual void setUpVector(D3DXVECTOR3 up);
 
 
 	// Movement related
@@ -79,21 +81,19 @@ public:
 	virtual void moveLeft(float diff) = 0;
 	virtual void moveRight(float diff) = 0;
 
-	void SetSpeed(float speed) { this->speed = speed; }
-	float GetSpeed() const { return this->speed; }
-	void SetSensitivity(float sens) { this->sensitivity = sens; }
-	float GetSensitivity() const { return this->sensitivity; }
+	virtual void SetSpeed(float speed) { this->speed = speed; }
+	virtual void SetSensitivity(float sens) { this->sensitivity = sens; }
 
-	void SetBoundries(D3DXVECTOR3 minBoundries, D3DXVECTOR3 maxBoundries);
-	void DisableBoundries();
+	virtual void SetBoundries(D3DXVECTOR3 minBoundries, D3DXVECTOR3 maxBoundries);
+	virtual void DisableBoundries();
 
 	// Terrain/Mesh interaction
-	void WalkOnTerrain(Terrain* terrain) { this->terrain = terrain; }
-	void StopWalkingOnTerrain() { this->terrain = NULL; }
-	void FollowMesh(Mesh* target) { this->followTarget = target; }
-	void StopFollowingMesh() { this->followTarget = NULL; }
-	void SetDistanceFromTarget(float distance) { this->DistanceFromTarget = distance; }
-	float GetDistanceFromTarget() const { return this->DistanceFromTarget; }
+	virtual void WalkOnTerrain(Terrain* terrain) { this->terrain = terrain; }
+	virtual void StopWalkingOnTerrain() { this->terrain = NULL; }
+	virtual void FollowMesh(Mesh* target) { this->followTarget = target; }
+	virtual void StopFollowingMesh() { this->followTarget = NULL; }
+	virtual void SetDistanceFromTarget(float distance) { this->DistanceFromTarget = distance; }
+	virtual float GetDistanceFromTarget() const { return this->DistanceFromTarget; }
 
 };
 

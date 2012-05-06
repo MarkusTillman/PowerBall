@@ -41,7 +41,34 @@ GameManager::~GameManager()
 	if(this->mFriendlyFlag)
 		SAFE_DELETE(this->mFriendlyFlag);
 }
+bool GameManager::UpdateEditor()
+{
+	
+	static bool running = false;
+	bool zoomOutPressed = false;
+	bool zoomInPressed = false;
+	if(!running)
+	{
+		this->mGameMode = CTF;
+		this->mNumPlayers = 0;
+		this->Initialize();
+		counter = 0;
+		running = true;
+	}
+	if(running)
+	{
+		float diff = mGe->Update();
+		counter += diff;
 
+		mPlatform->Update(diff);
+		
+		if(!this->mGe->isRunning())
+			running = false;
+	}
+	
+	//returns to menu after some win/draw screen.
+	return running;
+}
 bool GameManager::Play(const int numPlayers)
 {
 	this->mGameMode = DM;
@@ -55,7 +82,7 @@ bool GameManager::Play(const int numPlayers)
 	{
 		int numAlivePlayers = 0;
 				
-		float diff = mGe->Update();	
+		float diff = 5;//mGe->Update();	
 		counter += diff;
 
 		
@@ -80,6 +107,7 @@ bool GameManager::Play(const int numPlayers)
 				mBalls[0]->AddForce(Vector3(0,0,-diff));
 			if(mGe->GetKeyListener()->IsClicked(2))
 				mBalls[0]->AddForce(Vector3(0,diff*(11.0f/6.0f),0));
+			
 		}
 		else if(mGe->GetEngineParameters().CamType == TRD)
 		{
@@ -369,7 +397,7 @@ bool GameManager::PlayLAN(ServerInfo server)
 void GameManager::Initialize()
 {
 	D3DXVECTOR3 centerPlatform = D3DXVECTOR3(0,10,0);
-	mGe->GetCamera()->setPosition(D3DXVECTOR3(0, 30, -15));
+	mGe->GetCamera()->setPosition(D3DXVECTOR3(0, 30, 0));
 	mGe->GetCamera()->LookAt(centerPlatform);
 	//Image* testImg = mGe->CreateImage(D3DXVECTOR2(50, 50), D3DXVECTOR2(500, 75), "Media/PowerBall.png");
 	this->mLights[0] = mGe->CreateLight(D3DXVECTOR3(0, 50, 0));
