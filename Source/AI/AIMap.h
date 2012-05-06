@@ -17,12 +17,12 @@ class AIMap
 		{
 			private:
 				float x; //center
-				float y; //center
+				float z; //center
 				float value;
 
 			public:
-				Node()								{ this->x = 0.0f; this->y = 0.0f; this->value = 0.0f; }
-				Node(float x, float y, float value) { this->x = x; this->y = y; this->value = value; }
+				Node()								{ this->x = 0.0f; this->z = 0.0f; this->value = 0.0f; }
+				Node(float x, float z, float value) { this->x = x; this->z = z; this->value = value; }
 		};
 
 	private:

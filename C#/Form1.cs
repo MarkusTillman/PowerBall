@@ -21,9 +21,10 @@ namespace PowerBallAI
         Color       mNotForbiddenColor;
         Brush       mBrush;
         bool        mShowGrid;
-        float       mGridSize;
         float       mCameraPosX;
         float       mCameraPosZ;
+
+        Grid mGrid;
 
         public Form1()
         {
@@ -38,13 +39,17 @@ namespace PowerBallAI
             this.mNotForbiddenColor = Color.FromArgb(255, 0, 255, 0);
             this.mBrush = new SolidBrush(Color.Black);
             this.mShowGrid = false;
-            this.mGridSize = 5;
             this.mCameraPosX = 0.0f;
             this.mCameraPosZ = 0.0f;
 
+            this.mGrid = new Grid((uint)16, (uint)12, 25);
+
             //input
+            //key
             this.KeyPreview = true;
             this.KeyPress += new KeyPressEventHandler(Form1_KeyPress);
+            //mouse
+            this.RenderBox.MouseClick += new MouseEventHandler(Form1_MouseClick);
 
             //window
             this.ResizeEnd += new EventHandler(Form1_ResizeEnd);
@@ -109,6 +114,35 @@ namespace PowerBallAI
             }
             this.RenderBox_Paint(null, null);
         }
+        //Mouse input
+        void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    float x = e.X + this.mCameraPosX + this.mGrid.GetNodeSize() * 0.5f - this.RenderBox.Width * 0.5f;
+                    float z = -(e.Y - this.mCameraPosZ - this.mGrid.GetNodeSize() * 0.5f - this.RenderBox.Height * 0.5f);
+                    
+                    Node node = this.mGrid.GetNode(x, z);
+                    if (node != null)
+                    {
+                        node.SetValue(1.0f);
+                    }
+                    this.mGrid.Test(x, z, 1.0f);
+                    node.SetX(0);
+                    node.SetZ(0);
+                    
+
+                    this.mGrid.Update();
+                break;
+                case MouseButtons.Right:
+                    MessageBox.Show(this,"Right Button Click" );
+                break;
+                default: 
+                break;
+            }
+            this.RenderBox_Paint(null, null); //update renderbox
+        }
        
         //Load game engine **prel**
         private void InitAPI_Click(object sender, EventArgs e)
@@ -137,7 +171,7 @@ namespace PowerBallAI
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.InitialDirectory = ".."; //**
+            ofd.InitialDirectory = ".."; 
             ofd.Filter = "txt files (*.txt)|*.txt";
             ofd.FilterIndex = 1;
             ofd.Title = "Open AIMap from file.";
@@ -146,7 +180,7 @@ namespace PowerBallAI
             {
                 //grid size
                 TextReader textReader = new StreamReader(ofd.FileName);
-                this.mGridSize = (float)Convert.ToDouble(textReader.ReadLine());
+                this.mGrid.SetNodeSize((uint)Convert.ToInt32(textReader.ReadLine()));
                 RenderBox_Paint(null, null); //update renderbox
                 textReader.Close();
                 //areas
@@ -164,7 +198,7 @@ namespace PowerBallAI
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.InitialDirectory = "..\\..\\Bin"; //**
+            sfd.InitialDirectory = "..\\..\\Bin"; 
             sfd.Filter = "txt files (*.txt)|*.txt";
             sfd.Title = "Save AIMap to file.";
 
@@ -172,7 +206,7 @@ namespace PowerBallAI
             {
                 //grid size
                 TextWriter textWriter = new StreamWriter(sfd.FileName);
-                textWriter.WriteLine(this.mGridSize);
+                textWriter.WriteLine(this.mGrid.GetNodeSize());
                 textWriter.Close();
                 //areas
                 if (this.mMap.Save(sfd.FileName, true))
@@ -197,11 +231,10 @@ namespace PowerBallAI
         //Edit
         private void UndoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.mMap.RemoveLast())  //**använda stack, getAndRemove()**
+            if (this.mMap.RemoveLast())  //**ev. använda stack, getAndRemove()**
             {
                 this.ToolStripLableStatus.Text = "Undid:** getted.ToString**"; //**
-                //update renderbox
-                this.RenderBox_Paint(null, null);
+                this.RenderBox_Paint(null, null);  //update renderbox
             }
             else
             {
@@ -318,42 +351,62 @@ namespace PowerBallAI
             //draw grid
             if (this.mShowGrid)
             {
-                float xPos = -1.0f;
-                float zPos = -1.0f;
+                float xPos = 0.0f;
+                float zPos = 0.0f;
+                float value = 0.0f;
+                Brush brush = new SolidBrush(Color.FromArgb(0, 0, 0, 0));
 
-                xPos = (int)((float)this.RenderBox.Width / (float)2 - this.mCameraPosX);
-                this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos - 1, 0), new Point((int)xPos - 1, RenderBox.Height));
-                this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos, 0), new Point((int)xPos, RenderBox.Height));
-                this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos + 1, 0), new Point((int)xPos + 1, RenderBox.Height));
-                zPos = (int)((float)this.RenderBox.Height / (float)2 + this.mCameraPosZ);
-                this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos - 1), new Point(RenderBox.Width, (int)zPos - 1));
-                this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos), new Point(RenderBox.Width, (int)zPos));
-                this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos + 1), new Point(RenderBox.Width, (int)zPos + 1));
+                //draw nodes
+                for (uint i = 0; i < this.mGrid.GetNrOfCols(); i++)
+                {
+                    for (uint j = 0; j < this.mGrid.GetNrOfRows(); j++)
+                    {
+                        //reset brush to black
+                        brush = new SolidBrush(Color.FromArgb(0, 0, 0, 0));
 
-                while (xPos < RenderBox.Width)
-                {
-                    xPos += this.mGridSize;
-                    this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos, 0), new Point((int)xPos, RenderBox.Height));
+                        xPos = this.mGrid.GetNode(i, j).GetX() - this.mCameraPosX - this.mGrid.GetNodeSize() * 0.5f + this.RenderBox.Width * 0.5f;
+                        zPos = -this.mGrid.GetNode(i, j).GetZ() + this.mCameraPosZ - this.mGrid.GetNodeSize() * 0.5f + this.RenderBox.Height * 0.5f;
+
+                        //only draw the ones seen in the renderbox
+                        if (xPos > -this.mGrid.GetNodeSize() && 
+                            xPos < this.RenderBox.Width &&
+                            zPos > -this.mGrid.GetNodeSize() &&
+                            zPos < this.RenderBox.Height)
+                        {
+                            value = this.mGrid.GetNode(i, j).GetValue();
+                            if (value <= 1.0f && value >= 0.0f)
+                            {
+                                brush = new SolidBrush(Color.FromArgb(255, 0, (int)(value * 255), 0));
+                            }
+                            else if (value >= -1.0f && value < 0.0f)
+                            {
+                                brush = new SolidBrush(Color.FromArgb(255, (int)(value * 255), 0, 0));
+                            }
+                            this.mGraphics.FillRectangle(brush, xPos, zPos, this.mGrid.GetNodeSize(), this.mGrid.GetNodeSize());
+                        }
+                    }
                 }
-                xPos = (int)((float)this.RenderBox.Width / (float)2 - this.mCameraPosX);
-                while (xPos > 0)
+                
+                //draw grid
+                for (uint i = 0; i < this.mGrid.GetNrOfCols(); i++)
                 {
-                    xPos -= this.mGridSize;
-                    this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos, 0), new Point((int)xPos, RenderBox.Height));
+                    for(uint j = 0; j < this.mGrid.GetNrOfRows(); j++)
+                    {
+                        xPos = this.mGrid.GetNode(i, j).GetX() - this.mCameraPosX - this.mGrid.GetNodeSize() * 0.5f + this.RenderBox.Width * 0.5f;
+                        zPos = -this.mGrid.GetNode(i, j).GetZ() + this.mCameraPosZ - this.mGrid.GetNodeSize() * 0.5f + this.RenderBox.Height * 0.5f;
+
+                        value = this.mGrid.GetNode(i, j).GetValue();
+
+                        this.mGraphics.DrawRectangle(new Pen(Color.White), xPos, zPos, this.mGrid.GetNodeSize(), this.mGrid.GetNodeSize());
+                    }
                 }
 
-                while (zPos < RenderBox.Height)
-                {
-                    zPos += this.mGridSize;
-                    this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos), new Point(RenderBox.Width, (int)zPos));
-                } 
-                zPos = (int)((float)this.RenderBox.Height / (float)2 + this.mCameraPosZ);
-                while (zPos > 0)
-                {
-                    zPos -= this.mGridSize;
-                    this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos), new Point(RenderBox.Width, (int)zPos));
-                }
-            }
+                //draw axes
+                xPos = (float)this.RenderBox.Width * 0.5f - this.mCameraPosX;
+                this.mGraphics.DrawLine(new Pen(Color.Yellow, 3), new Point((int)xPos, 0), new Point((int)xPos, RenderBox.Height));
+                zPos = (float)this.RenderBox.Height * 0.5f + this.mCameraPosZ;
+                this.mGraphics.DrawLine(new Pen(Color.Yellow, 3), new Point(0, (int)zPos), new Point(RenderBox.Width, (int)zPos));
+             }
         }
 
         //Grid
@@ -374,21 +427,21 @@ namespace PowerBallAI
         }
         private void ScrollBarGridSize_Scroll(object sender, ScrollEventArgs e)
         {
-            this.TextBoxGridSize.Text = Convert.ToString((float)this.ScrollBarGridSize.Value / (float)10); //update scroll bar text
+            this.TextBoxGridSize.Text = Convert.ToString(this.ScrollBarGridSize.Value); //update scroll bar text
         }
         private void TextBoxGridSize_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                this.mGridSize = (float)Convert.ToDouble(this.TextBoxGridSize.Text); //set gridsize  **
-                this.ScrollBarGridSize.Value = (int)(this.mGridSize * 10); //update scroll bar value
+                this.mGrid.SetNodeSize((uint)Convert.ToInt32(this.TextBoxGridSize.Text)); //set gridsize 
+                this.ScrollBarGridSize.Value = (int)(this.mGrid.GetNodeSize()); //update scroll bar value 
                 this.RenderBox_Paint(null, null);  //update renderbox
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: Grid size value must be between 0.1 and 25. Original Error: " + ex.Message);
-                this.TextBoxGridSize.Text = "5";
-                this.ScrollBarGridSize.Value = 5;
+                MessageBox.Show("Error: Grid size value must be between 5 and 250. Original Error: " + ex.Message);
+                this.TextBoxGridSize.Text = "25";
+                this.ScrollBarGridSize.Value = 25;
             }
         }
 
@@ -411,7 +464,6 @@ namespace PowerBallAI
                 this.ScrollBarAlphaValue.Value = 0;
             }
         }
-
 
 
         

@@ -218,4 +218,117 @@ namespace PowerBallAI
             this.mAreas = new Area[this.mCapacity];
         }
     }
+
+
+
+
+
+
+
+
+    public class Node
+    {
+        private float mX;
+        private float mZ;
+        private float mValue;
+
+        public Node(float x, float z, float value)
+        {
+            this.mX = x;
+            this.mZ = z;
+            this.mValue = value;
+        }
+
+        public float GetX()     { return this.mX; }
+        public float GetZ()     { return this.mZ; }
+        public float GetValue() { return this.mValue; }
+
+        public void SetX(float x)           { this.mX = x; }
+        public void SetZ(float z)           { this.mZ = z; }
+        public void SetValue(float value)   {this.mValue = value; }
+    }
+
+    public class Grid
+    {
+        private uint        mNrOfRows;
+        private uint        mNrOfCols;
+        private uint        mNodeSize;
+        private Node[][]    mNodes;
+
+        public Grid(uint nrOfRows, uint nrOfCols, uint nodeSize)
+        {
+            this.mNrOfRows = nrOfRows;
+            this.mNrOfCols = nrOfCols;
+            this.mNodeSize = nodeSize;
+            this.mNodes = new Node[this.mNrOfCols][];
+            for (uint i = 0; i < this.mNrOfCols; i++)
+            {
+                this.mNodes[i] = new Node[this.mNrOfRows];
+            }
+            this.Update();
+        }
+
+        public uint GetNrOfRows()           { return this.mNrOfRows; }
+        public uint GetNrOfCols()           { return this.mNrOfCols; }
+        public uint GetNodeSize()           { return this.mNodeSize; }
+        public Node GetNode(uint i, uint j) { return this.mNodes[i][j]; }
+        public Node GetNode(float x, float y)
+        {
+            for (uint i = 0; i < this.mNrOfCols; i++)
+            {
+                for (uint j = 0; j < this.mNrOfRows; j++)
+                {
+                    float getX = this.mNodes[i][j].GetX();
+                    float getZ = this.mNodes[i][j].GetZ();
+                    if (x >= getX &&
+                        x <= getX + this.mNodeSize &&
+                        y >= getZ &&
+                        y <= getZ + this.mNodeSize)
+                    {
+                        return this.mNodes[i][j];
+                    }
+                }
+            }
+            return null;
+        }
+        public void Test(float x, float y, float value)
+        {
+            for (uint i = 0; i < this.mNrOfCols; i++)
+            {
+                for (uint j = 0; j < this.mNrOfRows; j++)
+                {
+                    float getX = this.mNodes[i][j].GetX();
+                    float getZ = this.mNodes[i][j].GetZ();
+                    if (x >= getX &&
+                        x <= getX + this.mNodeSize &&
+                        y >= getZ &&
+                        y <= getZ + this.mNodeSize)
+                    {
+                        this.mNodes[i][j].SetValue(value);
+                    }
+                }
+            }
+        }
+
+        public void SetNodeSize(uint size) { this.Update(); this.mNodeSize = size; }
+        public void Update()
+        {
+            float xOffset = -this.mNrOfRows * 0.5f * this.mNodeSize + this.mNodeSize * 0.5f;
+            float zOffset = this.mNrOfCols * 0.5f * this.mNodeSize - this.mNodeSize * 0.5f;
+
+            float x = 0.0f;
+            float z = 0.0f;
+            for (uint i = 0; i < this.mNrOfCols; i++)
+            {
+                z = zOffset - this.mNodeSize * i;
+                for (uint j = 0; j < this.mNrOfRows; j++)
+                {
+                    x = xOffset + this.mNodeSize * j;
+                    this.mNodes[i][j] = new Node(x, z, -2.0f);
+                }
+            }
+
+        }
+    }
+    
 }
