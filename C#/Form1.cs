@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Interop;
+using System.IO;
 
 namespace PowerBallAI
 {
@@ -150,7 +151,12 @@ namespace PowerBallAI
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-
+                //grid size
+                TextReader textReader = new StreamReader(ofd.FileName);
+                this.mGridSize = (float)Convert.ToDouble(textReader.ReadLine());
+                RenderBox_Paint(null, null); //update renderbox
+                textReader.Close();
+                //areas
                 if (this.mMap.Open(ofd.FileName))
                 {
                     this.RenderBox_Paint(null, null);
@@ -171,7 +177,12 @@ namespace PowerBallAI
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                if (this.mMap.Save(sfd.FileName))
+                //grid size
+                TextWriter textWriter = new StreamWriter(sfd.FileName);
+                textWriter.WriteLine(this.mGridSize);
+                textWriter.Close();
+                //areas
+                if (this.mMap.Save(sfd.FileName, true))
                 {
                     this.ToolStripLableStatus.Text = "Successfully saved file.";
                 }
@@ -295,8 +306,8 @@ namespace PowerBallAI
                 if (area is Rectangle)
                 {
                     this.mGraphics.FillRectangle(   this.mBrush,
-                                                    area.GetX() - this.mCameraPosX,
-                                                    area.GetZ() + this.mCameraPosZ,
+                                                    area.GetX() + (float)this.RenderBox.Width * 0.5f - ((Rectangle)area).GetWidth() * 0.5f - this.mCameraPosX,
+                                                    -area.GetZ() + (float)this.RenderBox.Height * 0.5f - ((Rectangle)area).GetHeight() * 0.5f + this.mCameraPosZ,
                                                     ((Rectangle)area).GetWidth(),
                                                     ((Rectangle)area).GetHeight());
                       
@@ -304,8 +315,8 @@ namespace PowerBallAI
                 else if (area is Circle)
                 {
                     this.mGraphics.FillEllipse( this.mBrush,
-                                                area.GetX() - this.mCameraPosX,
-                                                area.GetZ() + this.mCameraPosZ,
+                                                area.GetX() + (float)this.RenderBox.Width * 0.5f - ((Circle)area).GetRadius() - this.mCameraPosX,
+                                                -area.GetZ() + (float)this.RenderBox.Height * 0.5f - ((Circle)area).GetRadius() + this.mCameraPosZ,
                                                 ((Circle)area).GetRadius() * 2,
                                                 ((Circle)area).GetRadius() * 2);
                       
@@ -314,24 +325,40 @@ namespace PowerBallAI
             //draw grid
             if (this.mShowGrid)
             {
-                uint nrOfPointsX = (uint)(RenderBox.Width / this.mGridSize) + 1;
-                uint nrOfPointsZ = (uint)((RenderBox.Height) / this.mGridSize) + 1;
-                int xOffset = (int)mGridSize;
-                int zOffset = (int)mGridSize;
+                float xPos = -1.0f;
+                float zPos = -1.0f;
 
-                int xPos = -1;
-                for (uint i = 0; i < nrOfPointsX; i++)
+                xPos = (int)((float)this.RenderBox.Width / (float)2 - this.mCameraPosX);
+                this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos - 1, 0), new Point((int)xPos - 1, RenderBox.Height));
+                this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos, 0), new Point((int)xPos, RenderBox.Height));
+                this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos + 1, 0), new Point((int)xPos + 1, RenderBox.Height));
+                zPos = (int)((float)this.RenderBox.Height / (float)2 + this.mCameraPosZ);
+                this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos - 1), new Point(RenderBox.Width, (int)zPos - 1));
+                this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos), new Point(RenderBox.Width, (int)zPos));
+                this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos + 1), new Point(RenderBox.Width, (int)zPos + 1));
+
+                while (xPos < RenderBox.Width)
                 {
-                    xPos = (int)(this.mGridSize * i + xOffset);
-                    this.mGraphics.DrawLine(new Pen(Color.White), new Point(xPos, 0), new Point(xPos, RenderBox.Height));
-                    i++;
+                    xPos += this.mGridSize;
+                    this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos, 0), new Point((int)xPos, RenderBox.Height));
                 }
-                int yPos = -1;
-                for (uint i = 0; i < nrOfPointsZ; i++)
+                xPos = (int)((float)this.RenderBox.Width / (float)2 - this.mCameraPosX);
+                while (xPos > 0)
                 {
-                    yPos = (int)(this.mGridSize * i + zOffset);
-                    this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, yPos), new Point(RenderBox.Width, yPos));
-                    i++;
+                    xPos -= this.mGridSize;
+                    this.mGraphics.DrawLine(new Pen(Color.White), new Point((int)xPos, 0), new Point((int)xPos, RenderBox.Height));
+                }
+
+                while (zPos < RenderBox.Height)
+                {
+                    zPos += this.mGridSize;
+                    this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos), new Point(RenderBox.Width, (int)zPos));
+                } 
+                zPos = (int)((float)this.RenderBox.Height / (float)2 + this.mCameraPosZ);
+                while (zPos > 0)
+                {
+                    zPos -= this.mGridSize;
+                    this.mGraphics.DrawLine(new Pen(Color.White), new Point(0, (int)zPos), new Point(RenderBox.Width, (int)zPos));
                 }
             }
         }
@@ -358,10 +385,18 @@ namespace PowerBallAI
         }
         private void TextBoxGridSize_TextChanged(object sender, EventArgs e)
         {
-            this.mGridSize = (float)Convert.ToDouble(this.TextBoxGridSize.Text); //set gridsize 
-            this.ScrollBarGridSize.Value = (int)(this.mGridSize * 10); //update scroll bar value
-           
-            this.RenderBox_Paint(null, null);  //update renderbox
+            try
+            {
+                this.mGridSize = (float)Convert.ToDouble(this.TextBoxGridSize.Text); //set gridsize  **
+                this.ScrollBarGridSize.Value = (int)(this.mGridSize * 10); //update scroll bar value
+                this.RenderBox_Paint(null, null);  //update renderbox
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: Grid size value must be between 0.1 and 25. Original Error: " + ex.Message);
+                this.TextBoxGridSize.Text = "5";
+                this.ScrollBarGridSize.Value = 5;
+            }
         }
 
         //Alpha value
@@ -371,7 +406,17 @@ namespace PowerBallAI
         }
         private void TextBoxAlphaValue_TextChanged(object sender, EventArgs e)
         {
-            this.RenderBox_Paint(null, null);  //update renderbox
+            try
+            {
+                this.ScrollBarAlphaValue.Value = Convert.ToInt32(this.TextBoxAlphaValue.Text); //update scroll bar value
+                this.RenderBox_Paint(null, null);  //update renderbox
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: Alpha value must be between 0 and 255. Original Error: " + ex.Message);
+                this.TextBoxAlphaValue.Text = "0";
+                this.ScrollBarAlphaValue.Value = 0;
+            }
         }
 
 

@@ -431,7 +431,7 @@
             this.TextBoxGridSize.Name = "TextBoxGridSize";
             this.TextBoxGridSize.Size = new System.Drawing.Size(100, 20);
             this.TextBoxGridSize.TabIndex = 9;
-            this.TextBoxGridSize.Text = "5.0";
+            this.TextBoxGridSize.Text = "5";
             this.TextBoxGridSize.TextChanged += new System.EventHandler(this.TextBoxGridSize_TextChanged);
             // 
             // label12
@@ -446,12 +446,12 @@
             // ScrollBarGridSize
             // 
             this.ScrollBarGridSize.Location = new System.Drawing.Point(4, 365);
-            this.ScrollBarGridSize.Maximum = 256;
+            this.ScrollBarGridSize.Maximum = 250;
             this.ScrollBarGridSize.Minimum = 1;
             this.ScrollBarGridSize.Name = "ScrollBarGridSize";
             this.ScrollBarGridSize.Size = new System.Drawing.Size(176, 17);
             this.ScrollBarGridSize.TabIndex = 7;
-            this.ScrollBarGridSize.Value = 5;
+            this.ScrollBarGridSize.Value = 50;
             this.ScrollBarGridSize.Scroll += new System.Windows.Forms.ScrollEventHandler(this.ScrollBarGridSize_Scroll);
             // 
             // TextBoxAlphaValue

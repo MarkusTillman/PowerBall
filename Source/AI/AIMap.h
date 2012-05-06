@@ -7,6 +7,8 @@
 #pragma once
 
 #include "stdafx.h"
+#include "AIRectangle.h"
+#include "AICircle.h"
 
 class AIMap
 {
@@ -14,8 +16,8 @@ class AIMap
 		class Node
 		{
 			private:
-				float x;
-				float y;
+				float x; //center
+				float y; //center
 				float value;
 
 			public:
@@ -24,7 +26,8 @@ class AIMap
 		};
 
 	private:
-		float mGridSize;
+		float					mGridSize; //grid size in world coordinates
+		MaloW::Array<Node*>*	mNodes;
 
 	public:
 		AIMap();

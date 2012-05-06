@@ -394,22 +394,20 @@
     <ClInclude Include="..\Source\AI\AStarSearch.h">
       <Filter>AI</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="..\Source\AI\GameWrapper.h">
       <Filter>AI</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GraphicsEngine\MaloWLib\ORTHOCamera.h">
       <Filter>Graphics Engine Files\MaloWLib</Filter>
-=======
-    <ClInclude Include="..\Source\AI\AIArea.h">
-      <Filter>AI</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\AI\AICircle.h">
       <Filter>AI</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\AI\AIRectangle.h">
       <Filter>AI</Filter>
->>>>>>> 35678b2f5236b39f89ba172d9d42e6482186f2f3
+    </ClInclude>
+    <ClInclude Include="..\Source\AI\AIArea.h">
+      <Filter>AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
