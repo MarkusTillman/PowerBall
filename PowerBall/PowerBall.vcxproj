@@ -81,8 +81,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\AI\AIMap.h" />
+    <ClInclude Include="..\Source\AI\AIArea.h" />
     <ClInclude Include="..\Source\AI\AStarSearch.h" />
+<<<<<<< HEAD
     <ClInclude Include="..\Source\AI\GameWrapper.h" />
+=======
+    <ClInclude Include="..\Source\AI\AICircle.h" />
+    <ClInclude Include="..\Source\AI\AIRectangle.h" />
+>>>>>>> 35678b2f5236b39f89ba172d9d42e6482186f2f3
     <ClInclude Include="..\Source\Ball.h" />
     <ClInclude Include="..\Source\Flag.h" />
     <ClInclude Include="..\Source\GameManager.h" />
