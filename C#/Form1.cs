@@ -12,7 +12,7 @@ namespace PowerBallAI
 {
     public partial class Form1 : Form
     {
-        CppCLI      mGameEngine;
+        GameCLI      mGameEngine;
         AIMap       mMap;
         bool        mAPILoaded;
         Graphics    mGraphics;
@@ -29,7 +29,7 @@ namespace PowerBallAI
             InitializeComponent();
 
             //member variables
-            this.mGameEngine = new CppCLI();
+            this.mGameEngine = new GameCLI();
             this.mMap = new AIMap();
             this.mAPILoaded = false;
             this.mGraphics = null;
@@ -74,17 +74,17 @@ namespace PowerBallAI
             //Hantera när maximize knappen trycks
             if (this.WindowState == FormWindowState.Maximized)
             {
-                this.mGameEngine.OnResize(RenderBox.Width, RenderBox.Height);
+               // this.mGameEngine.OnResize(RenderBox.Width, RenderBox.Height);
             }
             //När man återgår till "normal" state igen så hantera de också
             else if (this.WindowState == FormWindowState.Normal)
             {
-                this.mGameEngine.OnResize(RenderBox.Width, RenderBox.Height);
+                //this.mGameEngine.OnResize(RenderBox.Width, RenderBox.Height);
             }
         }
         void Form1_ResizeEnd(object sender, EventArgs e)
         {
-            this.mGameEngine.OnResize(RenderBox.Width, RenderBox.Height);
+           // this.mGameEngine.OnResize(RenderBox.Width, RenderBox.Height);
         }
 
         //Key input
@@ -94,15 +94,19 @@ namespace PowerBallAI
             {
                 case 97: //a
                     this.mCameraPosX--; //**tmp, call gameengine**
+                    this.mGameEngine.MoveCamera(-1, 0);
                 break; 
                 case 100: //d
                     this.mCameraPosX++; //**tmp, call gameengine**
+                    this.mGameEngine.MoveCamera(1, 0);
                     break;
                 case 115: //s
                     this.mCameraPosZ--; //**tmp, call gameengine**
+                    this.mGameEngine.MoveCamera(0, -1);
                     break;
                 case 119: //w
                     this.mCameraPosZ++; //**tmp, call gameengine**
+                    this.mGameEngine.MoveCamera(0, 1);
                     break;
                 default: break;
             }
@@ -112,14 +116,17 @@ namespace PowerBallAI
         //Load game engine **prel**
         private void InitAPI_Click(object sender, EventArgs e)
         {
-            if(apiToLoad.Text == "HGE")
+            //if(apiToLoad.Text == "HGE")
+            if (!this.mAPILoaded)
             {
                 this.mGameEngine.Init(RenderBox.Handle, RenderBox.Width, RenderBox.Height);
                 this.mAPILoaded = true;
+
+
             }
-            else
+            //else
             {
-                MessageBox.Show("No api was selected or the api is not supported!!", "Warning", MessageBoxButtons.OK);
+              //  MessageBox.Show("No api was selected or the api is not supported!!", "Warning", MessageBoxButtons.OK);
             }
         }
 
@@ -268,7 +275,7 @@ namespace PowerBallAI
             this.mNotForbiddenColor = Color.FromArgb(alpha, 0, 255, 0);
 
             //Clear renderbox
-            this.mBrush = new SolidBrush(Color.Black);
+            this.mBrush = new SolidBrush(Color.Transparent);
             this.mGraphics.FillRectangle(this.mBrush, 0, 0, RenderBox.Width, RenderBox.Height);
            
             //Draw areas

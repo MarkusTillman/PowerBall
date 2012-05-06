@@ -27,6 +27,7 @@ D3DXMATRIX Camera::GetViewMatrix()
 {
 	D3DXVECTOR3 at = this->pos + this->forward;
 	D3DXMatrixLookAtLH(&view, &this->pos, &at, &this->up);
+	//::D3DXMatrixIdentity(&this->view);
 	return this->view; 
 }
 

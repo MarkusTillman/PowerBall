@@ -25,3 +25,12 @@ C:\Users\Administrator\Desktop\Årskurs 2\termin 2\läsperiod 2\DV1411 litet spe
 C:\Users\Administrator\Desktop\Årskurs 2\termin 2\läsperiod 2\DV1411 litet spelprojekt\PowerBall\PowerBallAI\PowerBall\C#\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\Administrator\Desktop\Årskurs 2\termin 2\läsperiod 2\DV1411 litet spelprojekt\PowerBall\PowerBallAI\PowerBall\C#\obj\x86\Debug\Example.exe
 C:\Users\Administrator\Desktop\Årskurs 2\termin 2\läsperiod 2\DV1411 litet spelprojekt\PowerBall\PowerBallAI\PowerBall\C#\obj\x86\Debug\Example.pdb
+D:\Skolarbete\Litet Spelprojekt - Högskola år 2\AiProjekt\PowerBall\C#\obj\x86\Debug\Example.exe
+D:\Skolarbete\Litet Spelprojekt - Högskola år 2\AiProjekt\PowerBall\C#\obj\x86\Debug\Example.pdb
+D:\Skolarbete\Litet Spelprojekt - Högskola år 2\AiProjekt\Bin\x86\Example.exe
+D:\Skolarbete\Litet Spelprojekt - Högskola år 2\AiProjekt\Bin\x86\Example.pdb
+D:\Skolarbete\Litet Spelprojekt - Högskola år 2\AiProjekt\PowerBall\C#\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Skolarbete\Litet Spelprojekt - Högskola år 2\AiProjekt\PowerBall\C#\obj\x86\Debug\PowerBallAI.Form1.resources
+D:\Skolarbete\Litet Spelprojekt - Högskola år 2\AiProjekt\PowerBall\C#\obj\x86\Debug\PowerBallAI.Properties.Resources.resources
+D:\Skolarbete\Litet Spelprojekt - Högskola år 2\AiProjekt\PowerBall\C#\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\Skolarbete\Litet Spelprojekt - Högskola år 2\AiProjekt\PowerBall\C#\obj\x86\Debug\GenerateResource.write.1.tlog

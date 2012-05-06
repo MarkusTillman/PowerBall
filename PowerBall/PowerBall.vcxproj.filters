@@ -206,6 +206,12 @@
     <ClCompile Include="..\Source\AI\AStarSearch.cpp">
       <Filter>AI</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\AI\GameWrapper.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\GraphicsEngine\MaloWLib\ORTHOCamera.cpp">
+      <Filter>Graphics Engine Files\MaloWLib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\GameManager.h">
@@ -387,6 +393,12 @@
     </ClInclude>
     <ClInclude Include="..\Source\AI\AStarSearch.h">
       <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\AI\GameWrapper.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\GraphicsEngine\MaloWLib\ORTHOCamera.h">
+      <Filter>Graphics Engine Files\MaloWLib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -18,12 +18,15 @@
     <ClInclude Include="C++CLIWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameCLI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C++CLIWrapper.cpp">
+    <ClCompile Include="AssemblyInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AssemblyInfo.cpp">
+    <ClCompile Include="GameCLI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

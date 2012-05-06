@@ -134,6 +134,11 @@ inline D3DXVECTOR3 RandUnitVec3()
 #endif 
 //////////////////////////////////////////////////////////////////////////
 
+#if defined _DLL_IMPORT
+#define DLL_USAGE __declspec(dllimport)
+#else
+#define DLL_USAGE __declspec(dllexport)
+#endif
 
 
 #endif

@@ -8,6 +8,7 @@ enum CameraType
 	FPS = 0,
 	RTS = 1,
 	TRD = 2,
+	ORTHO = 3,
 };
 
 class GraphicsEngineParams
